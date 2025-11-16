@@ -6,7 +6,7 @@ function Sidebar() {
   const [isActive, setIsActive] = useState(false);
 
   const toggleSidebar = () => {
-    setIsActive(!isActive);
+    setIsActive(!isActive);;
   };
 
   return (

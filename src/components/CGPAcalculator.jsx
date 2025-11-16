@@ -10,7 +10,7 @@ function CGPACalculator() {
     const [note, setNote] = useState('');
     const [isError, setIsError] = useState(false);
 
-    // --- NEW FUNCTION: Initializes/Resets the marks array based on numSubjects ---
+
     const initializeMarks = (count) => {
         const newMarks = Array.from({ length: count }, (_, index) => ({
             id: index + 1,
@@ -18,7 +18,7 @@ function CGPACalculator() {
             value: '',
         }));
         setMarks(newMarks);
-        // Clear results when subject count changes
+
         setResult('');
         setNote('');
         setIsError(false);

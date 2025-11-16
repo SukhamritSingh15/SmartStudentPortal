@@ -1,5 +1,6 @@
 import React from "react";
 import { Routes, Route, useLocation } from "react-router-dom";
+import "@fortawesome/fontawesome-free/css/all.min.css";
 
 import Sidebar from "./components/Sidebar";
 import CGPACalculator from "./components/CGPAcalculator";
@@ -11,6 +12,8 @@ import Communication from "./components/Communication";
 import Notice from "./components/Notice";
 import Mainpage from "./components/mainpage";
 import Login from "./components/login";
+import Myinfo from "./components/Myinfo";
+import Performance from "./components/Performance.jsx";
 
 
 function App() {
@@ -35,6 +38,9 @@ function App() {
         <Route path="/communication" element={<Communication />} />
         <Route path="/notice" element={<Notice />} />
         <Route path="/login" element={<Login />} />
+        <Route path="/myinfo" element={<Myinfo />} />
+        <Route path="/performance" element={<Performance />} />
+
 
         
 

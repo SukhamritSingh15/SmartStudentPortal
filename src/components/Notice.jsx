@@ -1,10 +1,11 @@
 import React, { useState } from "react";
+import Sidebar from "./Sidebar";   // <-- using your real sidebar
 
 export default function Notice() {
   const [search, setSearch] = useState("");
   const [category, setCategory] = useState("all");
 
-  // Notices
+  // Notices Data
   const notices = [
     {
       title: "Mid Term Exam Schedule Released",
@@ -23,8 +24,7 @@ export default function Notice() {
     {
       title: "New Academic Calendar Published",
       category: "academic",
-      description:
-        "Academic Calendar for session 2025–26 has been uploaded.",
+      description: "Academic Calendar for session 2025–26 has been uploaded.",
       date: "2025-09-28",
     },
     {
@@ -44,79 +44,18 @@ export default function Notice() {
 
   return (
     <>
-      {/* ===================== ALL CSS ===================== */}
       <style>{`
         body {
-          font-family: 'Inter', sans-serif;
-          background-color: #f7f9fc;
+          background: #f7f9fc !important;
           margin: 0;
           padding: 0;
         }
 
-
-        html, body, #root {
-  margin: 0;
-  padding: 0;
-  width: 100%;
-  height: 100%;
-  background: #f7f9fc !important;   /* FIX GLOBAL BACKGROUND */
-}
-
-        .page-wrapper {
-          min-height: 100vh;
-          display: flex;
-          background-color: #f7f9fc;
-        }
-
-        /* -------- Sidebar -------- */
-        .sidebar {
-          width: 256px;
-          background-color: #7b2ff7;
-          color: white;
-          padding: 20px;
-          min-height: 100vh;
-          position: fixed;
-          left: 0;
-          top: 0;
-          box-shadow: 2px 0 10px rgba(0,0,0,0.15);
-        }
-
-        .sidebar-logo {
-          padding: 20px 0;
-          border-bottom: 1px solid rgba(255,255,255,0.3);
-          text-align: center;
-        }
-.content {
-    margin-left: 256px !important;
-    width: calc(100% - 256px);
-}
-
-        .sidebar nav a {
-          display: block;
-          padding: 12px 20px;
-          color: white;
-          border-radius: 8px;
-          margin-bottom: 4px;
-          transition: 0.2s;
-        }
-
-        .sidebar nav a:hover {
-          background-color: rgba(255,255,255,0.1);
-          transform: translateX(4px);
-        }
-
-        .sidebar nav .active {
-          background-color: rgba(255,255,255,0.15);
-          font-weight: 600;
-          border-left: 4px solid white;
-          padding-left: 16px;
-        }
-
-        /* -------- Main Content -------- */
-        .content {
-          margin-left: 256px;
+        .notice-container {
+          margin-left: 250px; 
           padding: 32px;
-          width: calc(100% - 256px);
+          min-height: 100vh;
+          background: #f7f9fc;
         }
 
         .header-box {
@@ -145,7 +84,6 @@ export default function Notice() {
           max-width: 200px;
         }
 
-        /* -------- Notice Cards -------- */
         .notice-card {
           background: white;
           padding: 20px;
@@ -177,78 +115,59 @@ export default function Notice() {
           font-size: 14px;
           color: gray;
         }
+
       `}</style>
 
-      {/* ===================== PAGE START ===================== */}
-      <div className="page-wrapper">
+      {/* REAL SIDEBAR */}
+      <Sidebar />
 
-        {/* ================= SIDEBAR ================= */}
-        <aside className="sidebar">
-          <div className="sidebar-logo">
-            <img src="img1-removebg-preview.png" alt="logo" width="140" />
-          </div>
+      {/* PAGE CONTENT */}
+      <main className="notice-container">
 
-          <nav>
-            <a href="#">Dashboard</a>
-            <a href="#">My Info</a>
-            <a href="#">Performance</a>
-            <a href="#">Communication</a>
-            <a href="#">CGPA Calculator</a>
-            <a className="active" href="#">Notice</a>
-            <hr style={{ margin: "16px 0", opacity: 0.3 }} />
-            <a href="#">Logout</a>
-          </nav>
-        </aside>
+        <div className="header-box">
+          <h1 style={{ fontSize: "30px", margin: 0 }}>Official Notice Board</h1>
+          <p style={{ color: "gray", marginTop: "6px" }}>
+            Latest Announcements & Circulars for Students
+          </p>
+        </div>
 
-        {/* ================= CONTENT AREA ================= */}
-        <main className="content">
+        {/* Search + Filter */}
+        <div className="search-filter-box">
+          <input
+            type="text"
+            placeholder="Search by title or keyword..."
+            className="search-input"
+            onChange={(e) => setSearch(e.target.value)}
+          />
 
-          <div className="header-box">
-            <h1 style={{ fontSize: "30px", margin: 0 }}>Official Notice Board</h1>
-            <p style={{ color: "gray", marginTop: "6px" }}>
-              Latest Announcements & Circulars for Students
-            </p>
-          </div>
+          <select
+            className="filter-select"
+            onChange={(e) => setCategory(e.target.value)}
+          >
+            <option value="all">All Categories</option>
+            <option value="academic">Academic</option>
+            <option value="exam">Examination</option>
+            <option value="event">Events & Clubs</option>
+            <option value="admin">Administration</option>
+          </select>
+        </div>
 
-          {/* Search + Filter */}
-          <div className="search-filter-box">
-            <input
-              type="text"
-              placeholder="Search by title or keyword..."
-              className="search-input"
-              onChange={(e) => setSearch(e.target.value)}
-            />
-
-            <select
-              className="filter-select"
-              onChange={(e) => setCategory(e.target.value)}
-            >
-              <option value="all">All Categories</option>
-              <option value="academic">Academic</option>
-              <option value="exam">Examination</option>
-              <option value="event">Events & Clubs</option>
-              <option value="admin">Administration</option>
-            </select>
-          </div>
-
-          {/* Notices */}
-          {filtered.length > 0 ? (
-            filtered.map((n, i) => (
-              <div key={i} className="notice-card">
-                <div className="notice-title">{n.title}</div>
-                <div className="notice-desc">{n.description}</div>
-                <div className="notice-meta">Category: {n.category}</div>
-                <div className="notice-meta">Date: {n.date}</div>
-              </div>
-            ))
-          ) : (
-            <p style={{ textAlign: "center", color: "gray", marginTop: "40px" }}>
-              No notices found.
-            </p>
-          )}
-
-        </main>
-      </div>
+        {/* Notices */}
+        {filtered.length > 0 ? (
+          filtered.map((n, i) => (
+            <div key={i} className="notice-card">
+              <div className="notice-title">{n.title}</div>
+              <div className="notice-desc">{n.description}</div>
+              <div className="notice-meta">Category: {n.category}</div>
+              <div className="notice-meta">Date: {n.date}</div>
+            </div>
+          ))
+        ) : (
+          <p style={{ textAlign: "center", color: "gray", marginTop: "40px" }}>
+            No notices found.
+          </p>
+        )}
+      </main>
     </>
   );
 }

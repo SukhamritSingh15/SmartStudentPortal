@@ -18,7 +18,7 @@ function CGPACalculator() {
             value: '',
         }));
         setMarks(newMarks);
-        // Clear results when subject count changes
+
         setResult('');
         setNote('');
         setIsError(false);

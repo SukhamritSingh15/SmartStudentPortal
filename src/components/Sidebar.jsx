@@ -23,12 +23,12 @@ function Sidebar() {
       <div className={`sidebar ${isActive ? 'active' : ''}`} id="sidebar">
         {/* NOTE: React uses 'className' instead of 'class' */}
         <img src="img1-removebg-preview.png" alt="Logo" />
-        <a href="dashboard.html">Dashboard</a>
-        <a href="myinfo.html">My Info</a>
-        <a href="Communication.html">Communication</a>
-        <a href="performance.html">Performance</a>
-        <a href="notice.html">Notice</a>
-        <a href="login.html">Logout</a>
+        <a href="">Dashboard</a>
+        <a href="">My Info</a>
+        <a href="">Communication</a>
+        <a href="">Performance</a>
+        <a href="">Notice</a>
+        <a href="">Logout</a>
       </div>
     </>
   );

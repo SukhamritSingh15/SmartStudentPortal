@@ -1,6 +1,8 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
+import Chatbot from "./Chatbot";
 
 export default function Dashboard() {
+  const [isChatbotOpen, setIsChatbotOpen] = useState(false);
 
   useEffect(() => {
     /* =======================
@@ -195,6 +197,41 @@ export default function Dashboard() {
         }
         .col-md-7 { margin-top: 60px; }
       }
+
+      /* Chatbot styles */
+      .chatbot-container {
+        position: fixed;
+        bottom: 25px;
+        right: 25px;
+        z-index: 1000;
+        width: 370px;
+        box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+      }
+
+      /* Chatbot Toggle Button */
+      .chatbot-toggle-button {
+        position: fixed;
+        bottom: 25px;
+        right: 25px;
+        width: 60px;
+        height: 60px;
+        background-color: #7b2ff7;
+        color: white;
+        border-radius: 50%;
+        border: none;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 28px;
+        cursor: pointer;
+        box-shadow: 0 4px 10px rgba(0,0,0,0.2);
+        z-index: 999; /* Below chatbot, but above other content */
+        transition: transform 0.2s ease;
+      }
+
+      .chatbot-toggle-button:hover {
+        transform: scale(1.1);
+      }
     `;
     document.head.appendChild(style);
 
@@ -348,6 +385,16 @@ export default function Dashboard() {
 
         </div>
       </div>
+
+      {/* AI Chatbot Component (conditionally rendered) */}
+      {isChatbotOpen ? (
+        <Chatbot handleClose={() => setIsChatbotOpen(false)} />
+      ) : (
+        <button className="chatbot-toggle-button" onClick={() => setIsChatbotOpen(true)}>
+          {/* Using a simple chat icon emoji */}
+          💬
+        </button>
+      )}
     </>
   );
 }

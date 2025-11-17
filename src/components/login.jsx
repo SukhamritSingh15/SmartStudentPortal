@@ -1,168 +1,98 @@
-import React, { useEffect } from "react";
-import { initializeApp } from "firebase/app";
-import { getAuth, signInWithEmailAndPassword } from "firebase/auth";
+import React, { useState, useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
+import { signInWithEmailAndPassword } from 'firebase/auth';
+import { auth } from '../App.jsx';
 
-export default function Login() {
+const Login = () => {
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
+  const [error, setError] = useState('');
+  const [loading, setLoading] = useState(false);
+  const navigate = useNavigate();
+
   useEffect(() => {
-    const firebaseConfig = {
-      apiKey: "AIzaSyDokgC29ZW2v0MJDKVifnvH1M8W6sXJXUI",
-      authDomain: "my-login-project-243c5.firebaseapp.com",
-      projectId: "my-login-project-243c5",
-      storageBucket: "my-login-project-243c5.appspot.com",
-      messagingSenderId: "252344831078",
-      appId: "1:252344831078:web:59ee84778dd2a94854b1a7",
-      measurementId: "G-R0Q6WDB4YL",
-    };
+    if (auth?.currentUser?.uid) {
+      navigate('/dashboard');
+    }
+  }, [navigate]);
 
-    initializeApp(firebaseConfig);
-  }, []);
-
-  const handleLogin = (e) => {
+  const handleLogin = async (e) => {
     e.preventDefault();
+    setError('');
+    setLoading(true);
 
-    const auth = getAuth();
-    const email = document.getElementById("email").value.trim();
-    const password = document.getElementById("password").value.trim();
-    const msg = document.getElementById("message");
-
-    if (!email || !password) {
-      msg.style.color = "yellow";
-      msg.innerHTML = "⚠️ Please fill all fields";
-      return;
+    try {
+      await signInWithEmailAndPassword(auth, email.trim(), password);
+      navigate('/dashboard');
+    } catch (err) {
+      let errorMessage = "Login failed. Please check your credentials.";
+      if (err.code === 'auth/user-not-found' || err.code === 'auth/wrong-password') {
+        errorMessage = "Invalid email or password.";
+      } else if (err.code === 'auth/invalid-email') {
+        errorMessage = "Invalid email format.";
+      }
+      setError(errorMessage);
+    } finally {
+      setLoading(false);
     }
-    if (!email.includes("@") || !email.includes(".")) {
-      msg.style.color = "red";
-      msg.innerHTML = "❌ Invalid email format";
-      return;
-    }
-    if (password.length < 5) {
-      msg.style.color = "red";
-      msg.innerHTML = "❌ Password must be at least 5 characters";
-      return;
-    }
-
-    signInWithEmailAndPassword(auth, email, password)
-      .then(() => {
-        msg.style.color = "lightgreen";
-        msg.innerHTML = "Login successful! Redirecting...";
-        setTimeout(() => (window.location.href = "/dashboard"), 1500);
-      })
-      .catch((err) => {
-        msg.style.color = "red";
-        msg.innerHTML = err.message;
-      });
   };
 
   return (
-    <>
-      <style>{`
-        
-/* RESET EVERYTHING */
-* { margin: 0; padding: 0; box-sizing: border-box; }
+    <div className="w-full h-screen flex items-center justify-center bg-gray-300">
+      <div className="w-[420px] bg-white p-8 rounded-xl shadow">
+        <h2 className="text-center text-3xl font-bold mb-6 text-purple-700">Student Portal Login</h2>
 
-/* Remove sidebar on login page */
-.sidebar, .hamburger { display: none !important; }
+        {error && (
+          <div className="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded mb-4">
+            {error}
+          </div>
+        )}
 
-html, body, #root {
-  width: 100%;
-  height: 100%;
-  background: #938e8eff !important;
-  overflow: hidden;
-}
+        <form onSubmit={handleLogin}>
+          <div className="mb-4">
+            <label className="block text-gray-700 text-sm font-bold mb-2">Email</label>
+            <input
+              className="shadow border rounded w-full py-3 px-4 text-gray-700 focus:outline-none"
+              type="email"
+              placeholder="student@university.edu"
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
+              required
+              disabled={loading}
+            />
+          </div>
 
-/* PAGE CENTERING */
-.container {
-  width: 100vw;
-  height: 100vh;
-  display: flex;
-  justify-content: center;   /* Horizontal centering */
-  align-items: center;       /* Vertical centering */
-}
+          <div className="mb-6">
+            <label className="block text-gray-700 text-sm font-bold mb-2">Password</label>
+            <input
+              className="shadow border rounded w-full py-3 px-4 text-gray-700 focus:outline-none"
+              type="password"
+              placeholder="********"
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
+              required
+              disabled={loading}
+            />
+          </div>
 
-/* LOGIN BOX */
-.login-box {
-  width: 450px;
-  padding: 40px;
-  background: #1f1f1f;
-  border-radius: 12px;
-  color: white;
-}
+          <button
+            type="submit"
+            className="w-full bg-purple-600 hover:bg-purple-700 text-white font-bold py-2 rounded"
+            disabled={loading}
+          >
+            {loading ? "Logging in..." : "Sign In"}
+          </button>
+        </form>
 
-.login-box h2 {
-  margin-bottom: 10px;
-}
-
-.login-box p {
-  margin-bottom: 25px;
-  color: #aaa;
-}
-
-.login-box label {
-  margin-top: 15px;
-  display: block;
-}
-
-.login-box input {
-  width: 100%;
-  padding: 12px;
-  background: #2d2d2d;
-  border: none;
-  border-radius: 6px;
-  color: white;
-  margin-top: 5px;
-}
-
-.login-box button {
-  width: 100%;
-  margin-top: 25px;
-  padding: 12px;
-  background: #a362ea;
-  border: none;
-  border-radius: 6px;
-  color: white;
-  font-weight: bold;
-  cursor: pointer;
-}
-
-.login-box button:hover {
-  background: #8b4dde;
-}
-
-.forgot {
-  margin-top: 10px;
-}
-
-.forgot a {
-  color: #ccc;
-  font-size: 13px;
-  text-decoration: none;
-}
-
-      `}</style>
-
-      {/* LOGIN PAGE */}
-      <div className="container">
-        <div className="login-box">
-          <h2>Login</h2>
-          <p>Enter your credentials below</p>
-
-          <form onSubmit={handleLogin}>
-            <label>Email</label>
-            <input id="email" type="email" />
-
-            <label>Password</label>
-            <input id="password" type="password" />
-
-            <button type="submit">Login</button>
-
-            <div id="message" style={{ marginTop: "10px" }}></div>
-
-            <div className="forgot">
-              <a href="#">Forgot your password?</a>
-            </div>
-          </form>
-        </div>
+        <p className="text-center mt-4 text-sm">
+          Don't have an account?{" "}
+          <a href="/mainpage" className="text-purple-600 font-semibold">
+            Sign Up
+          </a>
+        </p>
       </div>
-    </>
+    </div>
   );
-}
+};
+
+export default Login;

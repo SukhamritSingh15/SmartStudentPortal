@@ -89,7 +89,119 @@ body:not(.dashboard-page) {
     transform: translateY(-5px);
     box-shadow: 0 15px 35px rgba(0,0,0,0.2);
 }
+/* ================== CHATBOT STYLES ================== */
+.chatbot-container {
+    width: 600px;
+    max-width: 90%;
+    height: 80vh; /* Set a fixed height */
+    padding: 20px;
+    background: #ffffff;
+    border-radius: 20px;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+    display: flex;
+    flex-direction: column;
+    margin: 40px auto; /* Center it horizontally */
+}
 
+.chatbot-container h3 {
+    text-align: center;
+    color: #915ee1; /* Matching sidebar color */
+    margin-bottom: 20px;
+}
+
+.chat-messages {
+    flex-grow: 1;
+    overflow-y: auto; /* Enable scrolling for messages */
+    padding: 10px;
+    background-color: #f5f5f5;
+    border-radius: 10px;
+    margin-bottom: 15px;
+    display: flex;
+    flex-direction: column;
+}
+
+.message {
+    max-width: 80%;
+    margin-bottom: 10px;
+    padding: 10px 15px;
+    border-radius: 15px;
+    line-height: 1.4;
+    display: flex;
+    align-items: flex-start;
+}
+
+.message i {
+    margin-right: 8px;
+    font-size: 16px;
+    padding-top: 3px;
+}
+
+.message p {
+    margin: 0;
+}
+
+.user-message {
+    align-self: flex-end;
+    background-color: #915ee1;
+    color: white;
+    border-top-right-radius: 5px;
+}
+
+.user-message i {
+    color: #c7aef5;
+}
+
+.bot-message {
+    align-self: flex-start;
+    background-color: #e0e0e0;
+    color: #333;
+    border-top-left-radius: 5px;
+}
+
+.bot-message i {
+    color: #915ee1;
+}
+
+.loading-indicator {
+    font-style: italic;
+    color: #555;
+}
+
+.error-message {
+    background-color: #ffe6e6;
+    color: #dc3545;
+    padding: 10px;
+    border-radius: 10px;
+    text-align: center;
+}
+
+.chat-input-form {
+    display: flex;
+}
+
+.chat-input-form input {
+    flex-grow: 1;
+    padding: 10px 15px;
+    border: 1px solid #ccc;
+    border-radius: 10px 0 0 10px;
+    font-size: 16px;
+}
+
+.chat-input-form button {
+    width: auto;
+    padding: 10px 20px;
+    background: #915ee1;
+    border-radius: 0 10px 10px 0;
+    transition: background-color 0.2s;
+}
+
+.chat-input-form button:hover {
+    background: #7a4bb7;
+}
+
+.chat-input-form button i {
+    margin-left: 5px;
+}
 /* FORM STYLES */
 h3 {
     text-align: center;

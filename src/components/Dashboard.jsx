@@ -261,21 +261,20 @@ export default function Dashboard() {
                 </a>
               </div>
 
-              <div className="finance-card">
-                <img src="1581884.png" alt="Tests" />
-                <h2>Tests</h2>
-              </div>
+           
 
               <div className="finance-card">
+                <a href="/Apply"> 
                 <img src="leave-request-2.png" alt="DL/ML" />
-                <h2>DL/ML</h2>
+                 <h2 style={{ color: "black" }}>DL/ML</h2>
+                </a>
               </div>
             </div>
 
             {/* Courses */}
             <div className="section-title mt-4 fw-bold">Enrolled Courses</div>
             <div className="courses-container">
-              {["Object Oriented Programming","Fundamentals of Database Systems","Data Structures & Algorithms","Operating Systems"]
+              {["Object Oriented Programming","Fundamentals of Database Systems","Data Structures & Algorithms"]
                 .map((course, i) => (
                 <div className="course-card" key={i}>
                   <div className="course-info">
@@ -343,7 +342,7 @@ export default function Dashboard() {
             </div>
 
             <button className="new-chat-btn">
-              <a href="/needhelp">Need Help 😊</a>
+              <a href="/Help">Need Help 😊</a>
             </button>
           </div>
 

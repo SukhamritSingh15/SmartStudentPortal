@@ -14,6 +14,7 @@ import Mainpage from "./components/mainpage";
 import Login from "./components/login";
 import Myinfo from "./components/Myinfo";
 import Performance from "./components/Performance.jsx";
+import Apply from "./components/Apply.jsx";
 
 
 function App() {
@@ -40,6 +41,8 @@ function App() {
         <Route path="/login" element={<Login />} />
         <Route path="/myinfo" element={<Myinfo />} />
         <Route path="/performance" element={<Performance />} />
+        <Route path="/Apply" element={<Apply/>} />
+
 
 
         

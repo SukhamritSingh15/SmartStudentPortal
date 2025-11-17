@@ -66,7 +66,7 @@ export default function Login() {
 html, body, #root {
   width: 100%;
   height: 100%;
-  background: #a362ea !important;
+  background: #938e8eff !important;
   overflow: hidden;
 }
 

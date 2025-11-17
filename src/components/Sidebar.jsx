@@ -26,6 +26,9 @@ function Sidebar() {
         {/* Navigation Links using React Router */}
         <Link to="/dashboard">Dashboard</Link>
         <Link to="/Myinfo">My Info</Link>
+        <Link to="/ai-assistant">
+          <i className="fas fa-robot"></i> AI Assistant
+        </Link>
         <Link to="/communication">Communication</Link>
         <Link to="/performance">Performance</Link>
         <Link to="/notice">Notice</Link>

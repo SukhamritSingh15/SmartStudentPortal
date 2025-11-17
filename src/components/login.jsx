@@ -1,168 +1,111 @@
-import React, { useEffect } from "react";
-import { initializeApp } from "firebase/app";
-import { getAuth, signInWithEmailAndPassword } from "firebase/auth";
+import React, { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
+import { signInWithEmailAndPassword } from 'firebase/auth'; // getAuth is no longer needed here
 
-export default function Login() {
-  useEffect(() => {
-    const firebaseConfig = {
-      apiKey: "AIzaSyDokgC29ZW2v0MJDKVifnvH1M8W6sXJXUI",
-      authDomain: "my-login-project-243c5.firebaseapp.com",
-      projectId: "my-login-project-243c5",
-      storageBucket: "my-login-project-243c5.appspot.com",
-      messagingSenderId: "252344831078",
-      appId: "1:252344831078:web:59ee84778dd2a94854b1a7",
-      measurementId: "G-R0Q6WDB4YL",
-    };
+// Import the pre-initialized auth instance from App.jsx
+import { auth } from '../App.jsx';
 
-    initializeApp(firebaseConfig);
-  }, []);
+const Login = () => {
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
+  const [error, setError] = useState('');
+  const [loading, setLoading] = useState(false);
+  const navigate = useNavigate();
 
-  const handleLogin = (e) => {
+  const handleLogin = async (e) => {
     e.preventDefault();
+    setError('');
+    setLoading(true);
 
-    const auth = getAuth();
-    const email = document.getElementById("email").value.trim();
-    const password = document.getElementById("password").value.trim();
-    const msg = document.getElementById("message");
-
-    if (!email || !password) {
-      msg.style.color = "yellow";
-      msg.innerHTML = "⚠️ Please fill all fields";
-      return;
+    try {
+      // Attempt to sign in with email and password using the imported auth instance
+      await signInWithEmailAndPassword(auth, email, password);
+      // Success, navigate to dashboard
+      navigate('/dashboard');
+    } catch (err) {
+      console.error("Login Error:", err.code, err.message);
+      
+      let errorMessage = "Login failed. Please check your credentials.";
+      if (err.code === 'auth/user-not-found' || err.code === 'auth/wrong-password') {
+        errorMessage = "Invalid email or password.";
+      } else if (err.code === 'auth/invalid-email') {
+        errorMessage = "The email address is not valid.";
+      }
+      
+      setError(errorMessage);
+    } finally {
+      setLoading(false);
     }
-    if (!email.includes("@") || !email.includes(".")) {
-      msg.style.color = "red";
-      msg.innerHTML = "❌ Invalid email format";
-      return;
-    }
-    if (password.length < 5) {
-      msg.style.color = "red";
-      msg.innerHTML = "❌ Password must be at least 5 characters";
-      return;
-    }
-
-    signInWithEmailAndPassword(auth, email, password)
-      .then(() => {
-        msg.style.color = "lightgreen";
-        msg.innerHTML = "Login successful! Redirecting...";
-        setTimeout(() => (window.location.href = "/dashboard"), 1500);
-      })
-      .catch((err) => {
-        msg.style.color = "red";
-        msg.innerHTML = err.message;
-      });
   };
 
+  // If a user is already authenticated (e.g., via the initial token), redirect them immediately
+  // We check if auth is defined before accessing auth.currentUser
+  if (auth && auth.currentUser && auth.currentUser.uid) {
+      navigate('/dashboard');
+      return null;
+  }
+
+
   return (
-    <>
-      <style>{`
+    <div className="login-page">
+      <div className="login-card">
+        <h2 className="text-center text-3xl font-bold mb-6 text-purple-700">Student Portal Login</h2>
         
-/* RESET EVERYTHING */
-* { margin: 0; padding: 0; box-sizing: border-box; }
+        {error && (
+          <div className="error-message bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded mb-4" role="alert">
+            {error}
+          </div>
+        )}
 
-/* Remove sidebar on login page */
-.sidebar, .hamburger { display: none !important; }
-
-html, body, #root {
-  width: 100%;
-  height: 100%;
-  background: #a362ea !important;
-  overflow: hidden;
-}
-
-/* PAGE CENTERING */
-.container {
-  width: 100vw;
-  height: 100vh;
-  display: flex;
-  justify-content: center;   /* Horizontal centering */
-  align-items: center;       /* Vertical centering */
-}
-
-/* LOGIN BOX */
-.login-box {
-  width: 450px;
-  padding: 40px;
-  background: #1f1f1f;
-  border-radius: 12px;
-  color: white;
-}
-
-.login-box h2 {
-  margin-bottom: 10px;
-}
-
-.login-box p {
-  margin-bottom: 25px;
-  color: #aaa;
-}
-
-.login-box label {
-  margin-top: 15px;
-  display: block;
-}
-
-.login-box input {
-  width: 100%;
-  padding: 12px;
-  background: #2d2d2d;
-  border: none;
-  border-radius: 6px;
-  color: white;
-  margin-top: 5px;
-}
-
-.login-box button {
-  width: 100%;
-  margin-top: 25px;
-  padding: 12px;
-  background: #a362ea;
-  border: none;
-  border-radius: 6px;
-  color: white;
-  font-weight: bold;
-  cursor: pointer;
-}
-
-.login-box button:hover {
-  background: #8b4dde;
-}
-
-.forgot {
-  margin-top: 10px;
-}
-
-.forgot a {
-  color: #ccc;
-  font-size: 13px;
-  text-decoration: none;
-}
-
-      `}</style>
-
-      {/* LOGIN PAGE */}
-      <div className="container">
-        <div className="login-box">
-          <h2>Login</h2>
-          <p>Enter your credentials below</p>
-
-          <form onSubmit={handleLogin}>
-            <label>Email</label>
-            <input id="email" type="email" />
-
-            <label>Password</label>
-            <input id="password" type="password" />
-
-            <button type="submit">Login</button>
-
-            <div id="message" style={{ marginTop: "10px" }}></div>
-
-            <div className="forgot">
-              <a href="#">Forgot your password?</a>
-            </div>
-          </form>
+        <form onSubmit={handleLogin}>
+          <div className="mb-4">
+            <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="email">
+              Email
+            </label>
+            <input
+              className="form-control shadow appearance-none border rounded w-full py-3 px-4 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+              id="email"
+              type="email"
+              placeholder="student@university.edu"
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
+              required
+              disabled={loading}
+            />
+          </div>
+          
+          <div className="mb-6">
+            <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="password">
+              Password
+            </label>
+            <input
+              className="form-control shadow appearance-none border rounded w-full py-3 px-4 text-gray-700 mb-3 leading-tight focus:outline-none focus:shadow-outline"
+              id="password"
+              type="password"
+              placeholder="********"
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
+              required
+              disabled={loading}
+            />
+          </div>
+          
+          <div className="flex items-center justify-between">
+            <button
+              type="submit"
+              disabled={loading}
+            >
+              {loading ? 'Logging In...' : 'Sign In'}
+            </button>
+          </div>
+        </form>
+        
+        <div className="mt-4 text-center">
+            <p className="text-sm text-gray-600">Don't have an account? <a href="/mainpage" className="text-purple-600 hover:text-purple-800 font-semibold">Sign Up</a></p>
         </div>
       </div>
-    </>
+    </div>
   );
-}
+};
+
+export default Login;
